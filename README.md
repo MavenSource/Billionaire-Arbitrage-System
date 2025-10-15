@@ -86,6 +86,7 @@ Mainnet trading involves risk—ensure your keys and environment are secure.
 - Python 3.8+
 - Node.js 18+
 - Docker (optional but recommended)
+- PM2 (optional, for WebSocket server process management)
 - Polygon/EVM RPC endpoint
 - Private key (never hardcoded!)
 
@@ -95,18 +96,26 @@ Mainnet trading involves risk—ensure your keys and environment are secure.
 git clone https://github.com/MavenSource/Billionaire-Arbitrage-System.git
 cd Billionaire-Arbitrage-System
 
+# Install WebSocket server dependencies
+pip install websockets msgpack
+
 # Backend
 cd backend
 pip install -r requirements.txt
 cp .env.example .env  # Add your RPC_URL and PRIVATE_KEY
 uvicorn main:app --reload
 
+# WebSocket Server (in a new terminal)
+cd ..
+python3 realtime/ws_server.py
+
 # Frontend
-cd ../frontend
+cd frontend
 npm install
 npm run dev
 
 # Access dashboard at http://localhost:3000
+# WebSocket server at ws://localhost:8765
 ```
 
 ### Deploy with Docker
@@ -123,6 +132,7 @@ docker-compose up --build
 
 - **backend/**: FastAPI app, integrates all pool/arb modules
 - **frontend/**: Next.js React app, live dashboard UI
+- **realtime/**: Ultra-low latency WebSocket server for live data streaming
 - **modules/**: Advanced MEV/arbitrage, math, and executor logic
 - **config/**, **abi/**: Configurations and ABI files for DeFi protocols
 - **docker/**: Dockerfiles and Compose setup
@@ -138,6 +148,48 @@ docker-compose up --build
 | `/api/health`   | GET    | System health/status              |
 | `/api/trade`    | POST   | Execute trade/arbitrage           |
 | `/ws/live`      | WS     | WebSocket stream for live updates |
+
+---
+
+## WebSocket Server
+
+The system includes a dedicated, ultra-fast WebSocket server for real-time data streaming and low-latency communication.
+
+### Key Features
+
+- **Ultra-low roundtrip latency**: Target < 150ms for real-time arbitrage data
+- **Efficient binary serialization**: Uses msgpack for faster data transfer vs JSON
+- **Scalable architecture**: Supports concurrent connections for multiple clients
+- **Auto-restart**: PM2 configuration ensures high availability
+- **AI/ML hooks**: Ready for integration with prediction and analytics modules
+
+### Running the WebSocket Server
+
+#### Manual Start
+```bash
+# Install dependencies
+pip install websockets msgpack
+
+# Start the server
+python3 realtime/ws_server.py
+```
+
+#### Using PM2 (Recommended for Production)
+```bash
+# Install PM2
+npm install -g pm2
+
+# Start WebSocket server with PM2
+pm2 start realtime/pm2.config.json
+
+# Monitor status
+pm2 status
+pm2 logs ws-server
+```
+
+The WebSocket server runs on **port 8765** and provides the `/ws/live` endpoint for streaming arbitrage opportunities, trade execution updates, and system metrics.
+
+For detailed documentation, see [realtime/README.md](realtime/README.md).
 
 ---
 

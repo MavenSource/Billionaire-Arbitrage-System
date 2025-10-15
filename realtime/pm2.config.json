@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "ws-server",
+      "script": "realtime/ws_server.py",
+      "interpreter": "python3",
+      "watch": false,
+      "autorestart": true,
+      "max_memory_restart": "250M"
+    }
+  ]
+}
