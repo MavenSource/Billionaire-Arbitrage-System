@@ -37,6 +37,8 @@ python3 test_integration.py
 25 sources →  99.5% precision (+9.0%)
 ```
 
+**Note**: These are theoretical estimates based on the model that additional price sources improve market price discovery. Baseline of 90% with 3-4 sources is from the problem statement.
+
 ## Code Examples
 
 ### Get High Priority Sources

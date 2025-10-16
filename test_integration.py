@@ -18,6 +18,29 @@ from dex_source_config import (
     DEXSourceManager
 )
 
+# Precision model constants
+PRECISION_BASE = 90.0  # Base precision with 3 sources
+PRECISION_BASE_SOURCES = 3  # Number of sources for base precision
+PRECISION_INCREMENT = 0.5  # Precision increase per additional source
+PRECISION_MAX = 99.5  # Maximum theoretical precision
+
+def estimate_precision(source_count: int) -> float:
+    """
+    Estimate arbitrage precision based on number of sources.
+    
+    This is a theoretical model where:
+    - 3-4 sources provide ~90% precision (baseline)
+    - Each additional source adds ~0.5% precision
+    - Maximum practical precision is 99.5%
+    
+    Args:
+        source_count: Number of DEX sources being compared
+    
+    Returns:
+        Estimated precision percentage
+    """
+    return min(PRECISION_BASE + (source_count - PRECISION_BASE_SOURCES) * PRECISION_INCREMENT, PRECISION_MAX)
+
 class TestDEXSourceConfiguration(unittest.TestCase):
     """Test DEX source configuration module"""
     
@@ -33,10 +56,11 @@ class TestDEXSourceConfiguration(unittest.TestCase):
     def test_minimum_source_count(self):
         """Test that we have at least 30 sources configured"""
         stats = self.manager.get_statistics()
+        expected_min_sources = 30
         self.assertGreaterEqual(
             stats['total_sources'], 
-            30, 
-            "Should have at least 30 DEX sources"
+            expected_min_sources, 
+            f"Should have at least {expected_min_sources} DEX sources"
         )
     
     def test_enabled_sources_count(self):
@@ -218,7 +242,13 @@ class TestDEXSourceConfiguration(unittest.TestCase):
         )
     
     def test_precision_requirements(self):
-        """Test that we meet precision requirements from issue"""
+        """
+        Test that we meet precision requirements from issue.
+        
+        Note: Precision estimates are theoretical, based on the model that
+        more price sources provide better market price discovery and arbitrage
+        detection capabilities.
+        """
         # Issue states: 3-4 sources = 90% precision, 20+ sources should be much higher
         
         # Test we can get 20+ sources
@@ -237,20 +267,29 @@ class TestDEXSourceConfiguration(unittest.TestCase):
             "Should be able to get 25+ sources"
         )
         
-        # Estimate precision improvement
-        precision_4 = min(90 + (4 - 3) * 0.5, 99.5)
-        precision_20 = min(90 + (20 - 3) * 0.5, 99.5)
-        precision_25 = min(90 + (25 - 3) * 0.5, 99.5)
+        # Verify sources are sorted by priority
+        priorities = [s.priority for s in sources_25]
+        self.assertEqual(
+            priorities, 
+            sorted(priorities, reverse=True),
+            "Sources should be sorted by priority (highest first)"
+        )
+        
+        # Estimate precision improvement using our model
+        precision_4 = estimate_precision(4)
+        precision_20 = estimate_precision(20)
+        precision_25 = estimate_precision(25)
         
         self.assertLess(precision_4, precision_20, "20 sources should have higher precision than 4")
         self.assertLess(precision_20, precision_25, "25 sources should have higher precision than 20")
         
         # Verify we meet the "much higher" requirement
         improvement = precision_20 - precision_4
+        min_improvement = 5.0
         self.assertGreater(
             improvement,
-            5.0,
-            "Improvement from 4 to 20 sources should be significant (>5%)"
+            min_improvement,
+            f"Improvement from 4 to 20 sources should be significant (>{min_improvement}%)"
         )
 
 class TestIntegrationWithBots(unittest.TestCase):

@@ -105,6 +105,8 @@ Edit `dex_source_settings.json`:
 | 20      | ~98.5%    | +8.5%       | High-precision mode |
 | 25-30   | ~99.5%    | +9.5%       | Maximum precision |
 
+**Note**: Precision percentages are theoretical estimates based on the principle that more price sources provide better market price discovery and arbitrage detection. The baseline of 90% with 3-4 sources is derived from the problem statement. Actual precision in production depends on market conditions, source reliability, and arbitrage strategy.
+
 ### Why More Sources = Better Precision
 
 1. **Price Discovery**: More sources provide better market price discovery
@@ -368,6 +370,8 @@ For issues or questions:
 - GitHub Issues: https://github.com/MavenSource/Billionaire-Arbitrage-System/issues
 - Run tests: `python3 test_dex_sources.py`
 - Run demo: `python3 demo_multi_source_scanning.py`
+
+**Note**: All GitHub repository URLs in this documentation refer to the actual MavenSource/Billionaire-Arbitrage-System repository.
 
 ## References
 
