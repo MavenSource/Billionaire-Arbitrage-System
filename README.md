@@ -82,6 +82,15 @@ Mainnet trading involves risk—ensure your keys and environment are secure.
 
 ---
 
+## Documentation
+
+- **[Quick Reference Guide](QUICK_REFERENCE.md)** - Quick start and common commands
+- **[DEX Source Configuration Guide](DEX_SOURCE_GUIDE.md)** - Comprehensive multi-source setup
+- **[Complete Documentation](complete_documentation.md)** - Full system documentation
+- **[Architecture Overview](#architecture)** - System architecture details
+
+---
+
 ## Quickstart
 
 ### Prerequisites
