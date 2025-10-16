@@ -33,7 +33,7 @@ def get_nonce_entropy(tx_count):
     """Randomize nonce for MEV defense."""
     return NonceEntropy.generate(tx_count)
 
-def scan_opportunities():
+async def scan_opportunities():
     """
     Scans all DEXs for best arbitrage routes. Returns highest profit route.
     """
@@ -118,4 +118,4 @@ async def main_loop():
         await asyncio.sleep(max(0, 0.15 - (time.time() - start)))  # Maintain ultra-fast scan cycle
 
 if __name__ == "__main__":
-    asyncio.run(main_loop() 
+    asyncio.run(main_loop()) 
