@@ -118,4 +118,4 @@ async def main_loop():
         await asyncio.sleep(max(0, 0.15 - (time.time() - start)))  # Maintain ultra-fast scan cycle
 
 if __name__ == "__main__":
-    asyncio.run(main_loop() 
+    asyncio.run(main_loop()) 
