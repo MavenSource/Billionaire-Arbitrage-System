@@ -33,7 +33,7 @@ def get_nonce_entropy(tx_count):
     """Randomize nonce for MEV defense."""
     return NonceEntropy.generate(tx_count)
 
-def scan_opportunities():
+async def scan_opportunities():
     """
     Scans all DEXs for best arbitrage routes. Returns highest profit route.
     """
