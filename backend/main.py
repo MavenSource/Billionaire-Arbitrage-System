@@ -41,9 +41,12 @@ app = FastAPI(
 )
 
 # CORS middleware
+# Read allowed origins from environment variable, default to localhost for development
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "http://localhost")
+allowed_origins = [origin.strip() for origin in allowed_origins_env.split(",") if origin.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure for production
+    allow_origins=allowed_origins,  # Use environment variable for production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
