@@ -174,10 +174,7 @@ class Web3ContractManager:
                 return None
             
             # Sign transaction
-            signed_txn = self.web3.eth.account.sign_transaction(
-                transaction, 
-                self.account.key
-            )
+            signed_txn = self.account.sign_transaction(transaction)
             
             # Send transaction
             tx_hash = self.web3.eth.send_raw_transaction(signed_txn.rawTransaction)
