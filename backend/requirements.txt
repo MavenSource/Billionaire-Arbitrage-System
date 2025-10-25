@@ -1,0 +1,22 @@
+# Billionaire Arbitrage System - Backend Dependencies
+
+# Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+
+# Web3 & Blockchain
+web3==6.11.3
+eth-account==0.10.0
+eth-utils==2.3.1
+
+# Async & WebSockets
+websockets==12.0
+aiohttp==3.9.1
+
+# Data Processing
+msgpack==1.0.7
+python-dotenv==1.0.0
+
+# Utilities
+python-multipart==0.0.6
