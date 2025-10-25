@@ -109,6 +109,10 @@ Detects live MEV arbitrage opportunities across DEXs.
 
 **Usage:**
 ```python
+import sys
+import os
+sys.path.insert(0, 'backend/modules')
+
 from mev_stack import OpportunityDetector, MEVArbitrageMathEngine
 
 detector = OpportunityDetector(math_engine)
@@ -210,7 +214,7 @@ List detected MEV arbitrage opportunities.
     "profit_percentage": "1.05",
     "is_profitable": true,
     "gas_cost": "5",
-    "timestamp": 1761413169.237
+    "timestamp": 1698765432.123
   }
 ]
 ```
