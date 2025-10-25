@@ -4,11 +4,27 @@ This guide will help you get the system up and running in minutes.
 
 ## Prerequisites
 
-- Python 3.8 or higher
+- **Python 3.11** (recommended for best compatibility)
+  - Python 3.10 and 3.12 are also supported
+  - **Windows users:** Python 3.13 is NOT recommended due to missing binary wheels
 - Node.js 18 or higher
 - Git
 
 ## Quick Installation
+
+### 0. Check Your Python Version (Recommended)
+
+Before starting, verify you have a compatible Python version:
+
+```bash
+python check_python_version.py
+```
+
+This script will:
+- Verify your Python version
+- Warn about potential compatibility issues
+- Provide version-specific recommendations
+- **Windows users with Python 3.13:** Will receive important warnings about missing binary wheels
 
 ### 1. Clone the Repository
 
@@ -148,8 +164,48 @@ Billionaire-Arbitrage-System/
 ## Troubleshooting
 
 ### Backend won't start
-- Ensure Python 3.8+ is installed: `python3 --version`
+- Ensure Python 3.11 is installed: `python3 --version`
 - Install dependencies: `pip install -r backend/requirements.txt`
+
+### Windows: pip build errors (cl.exe failed, msgpack/aiohttp/pydantic-core compilation errors)
+
+**Problem:** On Windows with Python 3.13, you may see errors like:
+```
+error: command 'cl.exe' failed: None
+ERROR: Failed building wheel for msgpack/aiohttp/pydantic-core
+```
+
+**Root Cause:** Python 3.13 lacks precompiled binary wheels for several dependencies on Windows. pip attempts to build from source but fails without MSVC or Rust toolchains.
+
+**Solution (Recommended):** Use Python 3.11
+
+1. **Download Python 3.11:**
+   - Visit https://www.python.org/downloads/
+   - Download Python 3.11.x (latest 3.11 version)
+   - Run installer and check "Add Python to PATH"
+
+2. **Create virtual environment with Python 3.11:**
+   ```powershell
+   # PowerShell
+   python -m pip install --upgrade pip
+   python -m pip install virtualenv
+   python -m virtualenv .venv -p C:\Python311\python.exe
+   .venv\Scripts\activate
+   python -m pip install -U pip setuptools wheel
+   cd backend
+   pip install -r requirements.txt
+   ```
+
+3. **Verify installation:**
+   ```powershell
+   python --version  # Should show Python 3.11.x
+   pip list
+   ```
+
+**Alternative:** If you must use Python 3.13, install Visual Studio Build Tools and Rust, but this is NOT recommended:
+- Install [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022) with "Desktop development with C++"
+- Install [Rust](https://rustup.rs/) for pydantic-core
+- This adds significant complexity and build time
 
 ### Frontend won't start
 - Ensure Node.js 18+ is installed: `node --version`
