@@ -143,7 +143,7 @@ def main():
         print()
         user_input = input("Continue anyway? (y/N): ").strip().lower()
         if user_input not in ('y', 'yes'):
-            print("Installation cancelled. Please install Python 3.11")
+            print("Version check cancelled. Please install Python 3.11 before proceeding with installation")
             sys.exit(1)
     else:
         print("✅ Python version check PASSED")
