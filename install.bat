@@ -2,8 +2,9 @@
 REM Install required Python dependencies for BillionaireBot
 
 echo Checking Python version...
-python --version > python_version.tmp 2>&1
-findstr /C:"3.13" python_version.tmp > nul
+for /f "tokens=2" %%i in ('python --version 2^>^&1') do set PYTHON_VERSION=%%i
+echo Detected Python version: %PYTHON_VERSION%
+echo %PYTHON_VERSION% | findstr /B /C:"3.13" > nul
 if %errorlevel% == 0 (
     echo.
     echo ============================================================
@@ -22,7 +23,6 @@ if %errorlevel% == 0 (
     echo Press Ctrl+C to cancel, or any key to continue anyway...
     pause > nul
 )
-del python_version.tmp > nul 2>&1
 
 echo Creating virtual environment...
 python -m venv venv

@@ -5,6 +5,13 @@ echo.
 echo IMPORTANT: Please edit .env after creation and add your real values!
 echo.
 
+if not exist backend (
+    echo ERROR: backend directory not found!
+    echo Please run this script from the root of the Billionaire-Arbitrage-System directory
+    pause
+    exit /b 1
+)
+
 cd backend
 
 (

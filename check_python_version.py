@@ -80,7 +80,7 @@ def check_python_version():
     
     # Good versions
     if minor in [10, 12]:
-        print("✅ GOOD: Python 3.{} is fully supported".format(minor))
+        print(f"✅ GOOD: Python 3.{minor} is fully supported")
         print("   All dependencies should install smoothly")
         print()
         return True
@@ -142,7 +142,7 @@ def main():
         print("   Installation may encounter issues")
         print()
         user_input = input("Continue anyway? (y/N): ").strip().lower()
-        if user_input != 'y':
+        if user_input not in ('y', 'yes'):
             print("Installation cancelled. Please install Python 3.11")
             sys.exit(1)
     else:

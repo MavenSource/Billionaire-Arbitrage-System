@@ -144,7 +144,12 @@ Frontend will be available at: http://localhost:3000
 1. **Recommended: Switch to Python 3.11**
    ```powershell
    # Create new virtual environment with Python 3.11
+   # Option 1: If you have multiple Python versions installed
+   py -3.11 -m virtualenv .venv
+   
+   # Option 2: If Python 3.11 is installed in default location
    python -m virtualenv .venv -p C:\Python311\python.exe
+   
    .venv\Scripts\activate
    cd backend
    pip install -r requirements.txt
