@@ -95,7 +95,9 @@ Mainnet trading involves risk—ensure your keys and environment are secure.
 
 ### Prerequisites
 
-- Python 3.8+
+- **Python 3.11** (recommended for best compatibility, especially on Windows)
+  - Python 3.10 and 3.12 are also supported
+  - **Note:** Python 3.13 is NOT recommended on Windows due to missing binary wheels for critical dependencies
 - Node.js 18+
 - Docker (optional but recommended)
 - PM2 (optional, for WebSocket server process management)
@@ -103,6 +105,14 @@ Mainnet trading involves risk—ensure your keys and environment are secure.
 - Private key (never hardcoded!)
 
 ### Install & Run Locally
+
+**Windows Users:** See the detailed [Windows Installation Guide](WINDOWS_INSTALL.md) for step-by-step instructions, especially if you encounter pip build errors.
+
+**Check Your Python Version First:**
+```bash
+python check_python_version.py
+```
+This will verify you have a compatible Python version and provide recommendations.
 
 ```bash
 git clone https://github.com/MavenSource/Billionaire-Arbitrage-System.git
