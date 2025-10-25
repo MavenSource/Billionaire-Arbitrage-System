@@ -8,7 +8,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Optional
 import os
+import sys
+from decimal import Decimal
 from dotenv import load_dotenv
+
+# Add modules to path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'modules'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'utils'))
 
 # Load environment variables
 load_dotenv()
@@ -48,6 +54,26 @@ class PoolData(BaseModel):
     token_a: str
     token_b: str
     liquidity: float
+
+class MEVOpportunity(BaseModel):
+    """MEV arbitrage opportunity model"""
+    dex1: str
+    dex2: str
+    token_in: str
+    token_out: str
+    amount_in: str
+    expected_profit: str
+    profit_percentage: str
+    is_profitable: bool
+    gas_cost: str
+    timestamp: float
+
+class MEVStatusResponse(BaseModel):
+    """MEV system status"""
+    enabled: bool
+    opportunities_detected: int
+    bundles_submitted: int
+    relays_configured: int
 
 # API Routes
 @app.get("/")
@@ -116,6 +142,49 @@ async def execute_trade(trade: TradeRequest):
         "message": "Trade submitted successfully (mock mode)",
         "trade_details": trade.dict()
     }
+
+@app.get("/api/mev/status", response_model=MEVStatusResponse)
+async def mev_status():
+    """Get MEV system status"""
+    mev_enabled = os.getenv("MEV_ENABLED", "true").lower() == "true"
+    
+    # In production, these would be tracked in a state manager
+    return MEVStatusResponse(
+        enabled=mev_enabled,
+        opportunities_detected=0,
+        bundles_submitted=0,
+        relays_configured=3  # Default number of relays
+    )
+
+@app.get("/api/mev/opportunities", response_model=List[MEVOpportunity])
+async def get_mev_opportunities():
+    """Get current MEV arbitrage opportunities"""
+    # In production, this would fetch from the MEV detector
+    try:
+        from mev_stack import OpportunityDetector, MEVArbitrageMathEngine
+        
+        math_engine = MEVArbitrageMathEngine()
+        detector = OpportunityDetector(math_engine)
+        opportunities = detector.detect_live_opportunities()
+        
+        result = []
+        for opp, reserves in opportunities:
+            result.append(MEVOpportunity(
+                dex1=opp.dex1,
+                dex2=opp.dex2,
+                token_in=opp.token_in,
+                token_out=opp.token_out,
+                amount_in=str(opp.amount_in),
+                expected_profit=str(opp.expected_profit),
+                profit_percentage=str(opp.profit_percentage),
+                is_profitable=opp.is_profitable,
+                gas_cost=str(opp.gas_cost),
+                timestamp=opp.timestamp
+            ))
+        
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error detecting opportunities: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

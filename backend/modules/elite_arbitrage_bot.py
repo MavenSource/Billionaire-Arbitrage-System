@@ -29,6 +29,7 @@ except ImportError:
 from advanced_dex_mathematics import ArbitrageMathEngine, QuantumMathEngine
 from web3_contract_integration import Web3ContractManager
 from flashloan_integration_flow import FlashloanFirstArbitrageScanner
+from mev_stack import MEVArbitrageMathEngine, TxBundleBuilder, FlashloanArbitrageOrchestrator
 
 class EliteArbitrageSystem:
     def __init__(self, config: Dict):
@@ -40,6 +41,27 @@ class EliteArbitrageSystem:
         self.contract_manager = Web3ContractManager(self.web3, config)
         self.scanner = FlashloanFirstArbitrageScanner(self.web3, self.contract_manager, self.math_engine)
         self.running = False
+        
+        # Initialize MEV components for enhanced performance
+        self.mev_enabled = config.get('MEV_ENABLED', True)
+        if self.mev_enabled:
+            self.mev_math_engine = MEVArbitrageMathEngine(min_profit_threshold=Decimal('0.001'))
+            private_key = config.get('PRIVATE_KEY', '')
+            mev_relays = config.get('MEV_RELAYS', [
+                'https://relay.flashbots.net',
+                'https://builder0x69.io',
+                'https://rpc.beaverbuild.org'
+            ])
+            self.mev_bundle_builder = TxBundleBuilder(self.web3, private_key, mev_relays)
+            self.mev_orchestrator = FlashloanArbitrageOrchestrator(
+                self.web3, self.mev_math_engine, self.mev_bundle_builder
+            )
+            self.logger.info("🔥 MEV Stack Module enabled - Top 3% performance class activated")
+        else:
+            self.mev_math_engine = None
+            self.mev_bundle_builder = None
+            self.mev_orchestrator = None
+            self.logger.info("⚠️  MEV mode disabled - using standard arbitrage")
         
         # Initialize DEX source manager for multi-source scanning
         self.dex_manager = get_dex_source_manager() if get_dex_source_manager else None
