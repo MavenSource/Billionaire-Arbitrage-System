@@ -142,6 +142,11 @@ Frontend will be available at: http://localhost:3000
 **Solutions:**
 
 1. **Recommended: Switch to Python 3.11**
+   > **Note:** The path `C:\Python311\python.exe` assumes a default installation.  
+   > If you installed Python elsewhere, adjust the path accordingly.  
+   > To find your Python 3.11 executable, run one of the following in PowerShell:  
+   > - `where python` (shows all python executables on your PATH)  
+   > - `py -0p` (shows all installed Python versions and their paths)  
    ```powershell
    # Create new virtual environment with Python 3.11
    # Option 1: If you have multiple Python versions installed
